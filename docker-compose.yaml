@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Servicio 1: Tu script ETL (El que ya hiciste)
+  etl-app:
+    build: .  # Construye usando el Dockerfile de aquí
+    volumes:
+      - ./src:/app/src  # "Hot Reload": Si cambias código en tu VS Code, cambia en el contenedor
+    depends_on:
+      - db  # Espera a que la base de datos exista
+
+  # Servicio 2: La Base de Datos
+  db:
+    image: postgres:15-alpine  # Usamos una imagen oficial ligera de Postgres
+    environment:
+      POSTGRES_USER: usuario_datos
+      POSTGRES_PASSWORD: password_secreto
+      POSTGRES_DB: base_integrador
+    ports:
+      - "5433:5432"  # Abre el puerto 5432 para que puedas entrar desde tu Windows
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Guarda los datos aunque apagues el contenedor
+
+# Definición del volumen persistente
+volumes:
+  postgres_data:
